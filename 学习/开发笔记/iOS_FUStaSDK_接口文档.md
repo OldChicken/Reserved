@@ -1,0 +1,31 @@
+# iOS开发笔记
+
+
+* **如果有一个第三方的静态库framework_A，如何基于这个库封装一个新的静态库framework_B**
+
+framework_A如果是一个静态库，基于这个静态库无法再封装成静态库framework_B(可以打包成功，但是会提示找不到符号)，但是可以基于静态framework_A封装成一个动态framework_B。如果必须要让framework_B是静态库，可以将framework_A中的.a库和头文件直接取出来，直接拖到B工程内编译。
+
+
+---
+
+
+
+* **音频、视频倒放算法如何实现**
+
+在iOS中，可以利用CMSampleBufferRef、AVAssetWriter、AVAssetWriterInput、AVAssetReader、AVAssetReaderOutput进行逆序读写。需要注意的是，iOS没有提供现成的逆序读取Api，因此视频、音频的逆序读取需要自己实现。核心思路：找到视频或者音频的最小单元，逆序读出来，同时修改时间信息。需要注意的是：视频的最小单元是画面帧，音频的最小单元是采样点。通过AVAssetReader和AVAssetReaderOutput读取出来的CMSampleBufferRef数组，可以视为视频的最小单元帧，但是不能一次性读出来，否则容易内存溢出。需要分段，从后往前按照最小窗口读，同时每个最小窗口数组也需要逆向取出CMSampleBufferRef。 而对于音频，最小单元不是CMSampleBufferRef数组，而需要将CMSampleBufferRef转换成数据，根据音频编码计算出多少个采样点，再把这些采样点进行逆序交换才行。
+
+
+---
+
+
+* **讲讲OC中的属性**
+
+在OC中，属性 = 实例变量 + Set方法 + Get方法，而属性有很多修饰符，不同的修饰符，其实都最终是影响这三个部分。
+
+举个例子，如果用writeread修饰一个属性name，则_name、Set方法、Get方法系统都会帮你生成，当你重写了两个方法时，_name就会失效，需要你自己通过@synthesize name = _name声明。当我们在外部通过点语法.name读取或者改变属性时，实际上是调用了set或者get方法，对_name进行修改。同样的,如果用readonly修饰属性name，那么系统首先会自动帮你生成一个实例变量_name,同时生成一个get方法，一个set方法，但是set方法不会对外暴露，因此你无法在外部通过.name改变_name，只能通过.name获取_name,你可以重写这两个方法，但一旦你重写了系统对外暴露的get方法，_name这个属性系统也不会再帮你生成。你需要通过@synthesize name = _name自己声明。如果只重写set方法，则_name和get方法依然有效。
+
+再举个例子，weak、strong、asign这些修饰符，影响的是系统生成的Set方法(你自己重写的Set方法也同样有效)，系统会再适当的时候帮你执行retain、release代码，控制实例变量的引用计数。
+
+再举个例子，nonatomic和atomic，是对set、get方法进行的原子操作，保证读写操作是否原子性。
+
+因此可以得到总结：在iOS中，修饰符是用来描述 实例变量、Set方法、Get方法三者的内部实现逻辑。
