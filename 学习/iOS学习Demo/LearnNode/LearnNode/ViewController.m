@@ -39,7 +39,15 @@
     
     
     //3.线程与内存
-    [self threadAndMemory];
+//    [self threadAndMemory];
+    
+    
+    //=================================
+    
+    
+    
+    //4.block循环引用
+    
     
     
     
@@ -201,24 +209,27 @@
 //            [mutableArray addObject:@(1)];
 //        });
 //    }
-//
+
+    
 //    //2.
-//    for (NSInteger i = 0; i < 100; i++) {
+//    for (NSInteger i = 0; i < 1000; i++) {
+//        dispatch_async(global_queue, ^{
+//            self.name = [NSString stringWithFormat:@"name:%@", @"123"];
+//        });
+//    }
+    
+    
+       //3.
+//    for (NSInteger i = 0; i < 1000; i++) {
 //        dispatch_async(global_queue, ^{
 //            self.name = @"123";
 //        });
 //    }
     
-    //3.
-    for (NSInteger i = 0; i < 1000; i++) {
-        dispatch_async(global_queue, ^{
-            self.name = [NSString stringWithFormat:@"123"];
-        });
-    }
-    
     //上述几个方法线程安全吗？分别讲讲为什么
-    //1.不安全，异步并发，系统会创建多个线程执行addObject方法，addObject方法未加锁，mutableArray的扩容无法受预期控制。
-    //2.
+    //1.不安全，但不会crash，异步并发，系统会创建多个线程执行addObject方法，addObject方法未加锁,不是原子性操作，mutableArray的扩容无法受预期控制。
+    //2.不安全,会crash，name是用nonatomic修饰的，其setter、getter方法都不是原子操作，因此可能出现_name指向的内存已经被回收了，但是其他线程同时使用_name release方法，导致crash
+    //3.安全，不会crash，虽然name的setter、getter方法不是原子操作，但是因为_name指向的是字符串常量区，内存不会被释放，多次release也无妨，不会出现野指针crash问题。
     
 }
 
