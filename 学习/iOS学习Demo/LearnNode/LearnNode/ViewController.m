@@ -10,6 +10,7 @@
 @interface ViewController ()
 
 @property (nonatomic,copy) NSString *name;
+@property (nonatomic,strong) NSMutableArray *array;
 @property (nonatomic,assign) BOOL isMainThreadExit;
 @end
 
@@ -21,7 +22,7 @@
     
     
     //1.消费者生产模式
-    [self produceDemo];
+//    [self produceDemo];
     
     
     //===============================
@@ -30,6 +31,15 @@
     
     //2.线程与队列
 //    [self threadAndQueue];
+    
+    
+    //=================================
+    
+    
+    
+    
+    //3.线程与内存
+    [self threadAndMemory];
     
     
     
@@ -122,50 +132,94 @@
  线程与队列
  */
 - (void)threadAndQueue {
-    //问：以下两for循环有什么区别？
     
     
-    for (NSInteger i = 0; i < 10000; i++) {
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            self.name = [NSString  stringWithFormat:@"name:%ld", i];
-//            NSLog(@"currentThread:%@\n",[NSThread currentThread]);
-        });
-    }
-//    解析：该for循环创建了10000次子线程(不是同时创建了10000个，gcd会自动控制最大并发数)，对name属性进行set操作。如果name属性是非原子性（nonatomic）的，程序极容易崩溃。因为多个线程同时setter，但是setter没加锁，所以容易重复release，导致野指针。改成atomic，读写方法就是线程安全的。
-//    奇怪的是，如果在self.name后面加上一行打印代码，也不会崩溃。原因未知。加上其他代码没效果。
-
-
+    //问：以下几个方法有什么区别？
     
-    dispatch_queue_t queue = dispatch_queue_create("threadAndQueue", DISPATCH_QUEUE_SERIAL);
-    for (NSInteger i = 0; i < 10000; i++) {
-        dispatch_async(queue, ^{
-            self.name = [NSString  stringWithFormat:@"name:%ld", i];
-            NSLog(@"currentThread:%@\n",[NSThread currentThread]);
-        });
-    }
-//    该for循环创建了一个线程，并往其串行队列中插入了10000个任务，每个任务都是修改name的属性。
-
+//    dispatch_queue_t global_queue = dispatch_get_global_queue(0, 0);
+//    for (NSInteger i = 0; i < 100; i++) {
+//        dispatch_async(global_queue, ^{
+//            NSLog(@" i:%ld，currentThread:%@",(long)i,[NSThread currentThread]);
+//            usleep(0.1 * USEC_PER_SEC);
+//        });
+//    }
+//    解析：向全局队列global_queue里插入了100个任务,系统会创建100次子线程，但是不是同时创建100个子线程，因为GCD
+//    会控制最大并发数。整体上，打印的数值是递增的，但是因为每次都是由n个线程同时执行，所以这n个线程的打印顺序是错乱的。
+//    如果是通过dispatch_block_t创建的blcok任务，未执行到的block可以被取消。
     
     
     
-    
-    dispatch_queue_t queue2 = dispatch_queue_create("threadAndQueue", DISPATCH_QUEUE_SERIAL);
-    dispatch_async(queue2, ^{
-        for (NSInteger i = 0; i < 10000; i++) {
-            self.name = [NSString  stringWithFormat:@"name:%ld", i];
-            NSLog(@"currentThread:%@\n",[NSThread currentThread]);
-        }
-    });
-//    该for循环创建了一个子线程，并往这个线程队列中插入了一个任务，这个任务是修改name属性10000次。
-    
-    
-    
-    
+//    dispatch_queue_t global_queue = dispatch_get_global_queue(0, 0);
+//    dispatch_async(global_queue, ^{
+//        for (NSInteger i = 0; i < 100; i++) {
+//            NSLog(@" i:%ld，currentThread:%@",(long)i,[NSThread currentThread]);
+//            usleep(0.1 * USEC_PER_SEC);
+//        }
+//    });
+//    解析：向全局队列global_queue里插入了1个block任务,系统会创建一个子线程，去执行这1个block任务。这个任务是依次打印i的值。
+//
 
     
+//    dispatch_queue_t serial_queue = dispatch_queue_create("threadAndQueue", DISPATCH_QUEUE_SERIAL);
+//    for (NSInteger i = 0; i < 100; i++) {
+//        dispatch_async(serial_queue, ^{
+//            NSLog(@" i:%ld，currentThread:%@",(long)i,[NSThread currentThread]);
+//        });
+//    }
+//     解析：向串行队列serial_queue里插入了100个block任务,系统会创建一个子线程，去依次执行这100个block任务。如果是通过dispatch_block_t创
+//     建的blcok任务，未执行到的block可以被取消。
 
+    
+    
+    
+//    dispatch_queue_t serial_queue2 = dispatch_queue_create("threadAndQueue", DISPATCH_QUEUE_SERIAL);
+//    dispatch_async(serial_queue2, ^{
+//        for (NSInteger i = 0; i < 100; i++) {
+ //           NSLog(@" i:%ld，currentThread:%@",(long)i,[NSThread currentThread]);
+//        }
+//    });
+//     解析：向串行队列serial_queue里插入了1个block任务,系统会创建一个子线程，去执行这1个block任务。这个任务是依次打印i的值。
+//
+    
+    
 
 }
 
+
+
+/*
+ 线程与内存
+ */
+- (void)threadAndMemory {
+    
+    NSMutableArray *mutableArray = [NSMutableArray array];
+    dispatch_queue_t global_queue = dispatch_get_global_queue(0, 0);
+    
+    //1.
+//    for (NSInteger i = 0; i < 100; i++) {
+//        dispatch_async(global_queue, ^{
+//            [mutableArray addObject:@(1)];
+//        });
+//    }
+//
+//    //2.
+//    for (NSInteger i = 0; i < 100; i++) {
+//        dispatch_async(global_queue, ^{
+//            self.name = @"123";
+//        });
+//    }
+    
+    //3.
+    for (NSInteger i = 0; i < 1000; i++) {
+        dispatch_async(global_queue, ^{
+            self.name = [NSString stringWithFormat:@"123"];
+        });
+    }
+    
+    //上述几个方法线程安全吗？分别讲讲为什么
+    //1.不安全，异步并发，系统会创建多个线程执行addObject方法，addObject方法未加锁，mutableArray的扩容无法受预期控制。
+    //2.
+    
+}
 
 @end
