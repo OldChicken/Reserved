@@ -21,7 +21,7 @@
     // Do any additional setup after loading the view.
     
     
-    //1.消费者生产模式
+    //消费者生产模式
 //    [self produceDemo];
     
     
@@ -29,7 +29,7 @@
     
     
     
-    //2.线程与队列
+    //线程与队列
 //    [self threadAndQueue];
     
     
@@ -38,7 +38,7 @@
     
     
     
-    //3.线程与内存
+    //线程与内存
 //    [self threadAndMemory];
     
     
@@ -46,11 +46,14 @@
     
     
     
-    //4.block循环引用
+    //block循环引用
     
     
+    //=================================
+
     
-    
+    //信号量
+//    [self semaphore];
 }
 
 /*
@@ -231,6 +234,80 @@
     //2.不安全,会crash，name是用nonatomic修饰的，其setter、getter方法都不是原子操作，因此可能出现_name指向的内存已经被回收了，但是其他线程同时使用_name release方法，导致crash
     //3.安全，不会crash，虽然name的setter、getter方法不是原子操作，但是因为_name指向的是字符串常量区，内存不会被释放，多次release也无妨，不会出现野指针crash问题。
     
+}
+
+
+
+//信号量
+- (void)semaphore {
+    
+    //信号量控制最大并发数
+    int taskCount = 100;
+    dispatch_queue_t workConcurrentQueue = dispatch_queue_create("cccccccc", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_queue_t serialQueue = dispatch_queue_create("sssssssss",DISPATCH_QUEUE_SERIAL);
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(3);
+    dispatch_async(serialQueue, ^{
+        for (NSInteger i = 0; i < taskCount; i++) {
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+            dispatch_async(workConcurrentQueue, ^{
+                NSLog(@"thread-info:%@开始执行任务%d",[NSThread currentThread],(int)i);
+                sleep(1);
+                NSLog(@"thread-info:%@结束执行任务%d",[NSThread currentThread],(int)i);
+                dispatch_semaphore_signal(semaphore);
+            });
+        }
+    });
+    NSLog(@"主线程...!");
+    
+    
+    //上述代码，将100个任务，以最大并发数3进行多线程执行。
+    //dispatch_async(serialQueue，block）的目的是为了让主线程的打印先执行，子线程内部再开启一个for循环创建多线程。如果for循环放到主线程，随着
+    //taskCount的增加，for循环的耗时变旧，则子线程有可能会先执行。一般的，两个线程谁先执行不能确定，但是如果for循环放在主线程，则随着循环次数变多，
+    //主线程的代码执行可能会达不到你的预期
+    
+    
+    
+    
+    //=============================
+    
+    
+    //信号量进行多个线程同步
+//    dispatch_queue_t queue = dispatch_queue_create("11111111", DISPATCH_QUEUE_CONCURRENT);
+//    dispatch_semaphore_t semaphore = dispatch_semaphore_create(1);
+//    dispatch_async(queue, ^{
+//        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+//        for (int i = 0; i<100; i++) {
+//            NSLog(@"111");
+//        }
+//        dispatch_semaphore_signal(semaphore);
+//    });
+//
+//    dispatch_async(queue, ^{
+//        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+//        for (int i = 0; i<100; i++) {
+//            NSLog(@"222");
+//        }
+//        dispatch_semaphore_signal(semaphore);
+//    });
+//
+//    dispatch_async(queue, ^{
+//        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+//        for (int i = 0; i<100; i++) {
+//            NSLog(@"333");
+//        }
+//        dispatch_semaphore_signal(semaphore);
+//    });
+//
+//    NSLog(@"主线程...!");
+    
+}
+
+
+
+
+
+- (IBAction)click:(UIButton *)sender {
+
 }
 
 @end
