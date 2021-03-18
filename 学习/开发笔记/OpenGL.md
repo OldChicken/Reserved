@@ -50,5 +50,8 @@ OpenGL是图形API，因此可以说所有的运算和结果最终都是需要�
 
 
 
+问：纹理、FBO、RenderBuffer区别联系
+
+
 
 
