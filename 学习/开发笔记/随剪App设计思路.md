@@ -23,7 +23,7 @@ startVideoCompositionRequest
 
 2.创建一个AVMutableVideoComposition实例 yourVideoComposition,设置其customVideoCompositorClass，
 yourVideoComposition.customVideoCompositorClass = [CustomCompositionClass class];
-此外还有一些渲染格式，以及重要的instructions数组对象，这个对象里里其实存放的是自己需要合成的一些内容，分配他们的合成时间等，主要从snapshoat中转换而来。
+此外还有一些渲染格式，以及重要的instructions数组对象，这个对象里里其实存放的是自己需要合成的一些渲染内容，分配他们的合成时间timerange等，倍速播放信息等，主要从snapshoat中转换、计算而来。
 
 3.创建一个AVPlayerItem实例newItem，设置videoComposition属性为新建的videoComposition
 newItem.videoComposition = yourVideoComposition
