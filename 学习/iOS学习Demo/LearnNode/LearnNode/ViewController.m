@@ -10,6 +10,7 @@
 @interface ViewController ()
 
 @property (nonatomic,copy) NSString *name;
+@property (nonatomic,assign) int age;
 @property (nonatomic,strong) NSMutableArray *array;
 @property (nonatomic,assign) BOOL isMainThreadExit;
 @end
@@ -54,6 +55,18 @@
     
     //信号量
 //    [self semaphore];
+    
+    
+
+    
+//    //2.
+//    for (NSInteger i = 0; i < 1000; i++) {
+//        dispatch_async(global_queue, ^{
+//            self.name = [NSString stringWithFormat:@"name:%@", @"123"];
+//        });
+//    }
+    
+    
 }
 
 /*
@@ -171,6 +184,7 @@
 //
 
     
+    
 //    dispatch_queue_t serial_queue = dispatch_queue_create("threadAndQueue", DISPATCH_QUEUE_SERIAL);
 //    for (NSInteger i = 0; i < 100; i++) {
 //        dispatch_async(serial_queue, ^{
@@ -181,7 +195,14 @@
 //     建的blcok任务，未执行到的block可以被取消。
 
     
-    
+//    for (int i = 0; i < 100; i++) {
+//        dispatch_queue_t serial_queue = dispatch_queue_create("threadAndQueue", DISPATCH_QUEUE_SERIAL);
+//        dispatch_async(serial_queue, ^{
+//            NSLog(@"%@",[NSThread currentThread] );
+//            sleep(1);
+//        });
+//    }
+//     解析：创建了100个串行队列，会开启100次子线程。
     
 //    dispatch_queue_t serial_queue2 = dispatch_queue_create("threadAndQueue", DISPATCH_QUEUE_SERIAL);
 //    dispatch_async(serial_queue2, ^{
