@@ -56,7 +56,13 @@
     //信号量
 //    [self semaphore];
     
-    
+    NSString *a = nil;
+    NSString *b = nil;
+    if ([a isEqual:b]) {
+        NSLog(@"equal");
+    }else {
+        NSLog(@"not equal");
+    }
 
     
 //    //2.
