@@ -7,3 +7,4 @@
 * UIView是CALayer的delegate
 * UIView主要处理事件，CALayer负责绘制
 * 每个 UIView 内部都有一个 CALayer 在背后提供内容的绘制和显示，并且 UIView 的尺寸样式都由内部的 Layer 所提供。两者都有树状层级结构，layer 内部有 SubLayers，View 内部有 SubViews.但是 Layer 比 View 多了个AnchorPoint
+* CALayer坐标系相比于UIView多了一个锚点.(待展开)
