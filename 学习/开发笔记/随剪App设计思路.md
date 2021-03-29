@@ -11,11 +11,13 @@
      
 新项目：
 
-**架构以及设计思路**:MVVM+RAC，UI更新非常灵活，一个项目是一个比较庞大的json，json里存放了项目的必要信息+一个历史栈数组，数组的每一个元素就是一个snapshoat(依然是一个json模型)，可以理解成一个快照。即，任何一步编辑操作，都会新生成一个snapshoat，添加进数组历史栈中，作为新的一步。你可以理解成，某一时刻改动了项目，则整个界面发生了改变以后，将这个界面投射成一个新的snapshoat，下次再读到这个snapshoat时，根据这个snapshoat还原出界面，简单说就是View的改动，导致模型拷贝一份snapshoat，在新的snapshoat上更新改动，存入数组。
+**架构以及设计思路**:MVVM+RAC，UI更新非常灵活，一个项目是一个比较庞大的json存储模型，json里存放了项目的必要信息+一个历史栈数组，数组的每一个元素就是一个snapshot(依然是一个json模型)，可以理解成一个快照。即，任何一步编辑操作，都会新生成一个snapshoat，添加进数组历史栈中，即当前状态发生了改变以后，将新的界面状态投射成一个新的snapshot模型，下次再读到这个snapshot时，根据这个snapshoat还原出界面，简单说就是状态的改动，就基于当前状态拷贝一份snapshot，在新的snapshot上更新改动，存入数组。然后用新的snapshot去刷新UI。
 
-snapshoat:记录了当前一步渲染状态的所有信息，用一个snapshoat，就能还原出一个完整的画面，当前编辑页面有多少个图层，每个图层有多少个素材，素材旋转了多少度，透明度是多少等等等等一系列信息，全部都保存在snapshot中。因此，通过snapshoat还原出UI并渲染，以及UI的每一步需要记录的操作新生成snapshot，是整个架构里的难点。对snapshoat的模型设计要求非常高。
+snapshoat:记录了当前一步渲染状态的所有信息，用一个snapshoat，就能还原出一个完整的编辑画面，当前编辑页面有多少个图层，每个图层有多少个素材，素材旋转了多少度，透明度是多少等等等等一系列信息，全部都保存在snapshot中。因此，通过snapshoat还原出UI并渲染，以及UI的每一步需要记录的操作新生成snapshot，是整个架构里的难点。对snapshoat的模型设计要求非常高。
 
-**渲染重定向**:渲染的核心思路，我称之为重定向，利用的是AVPlayer播放过程中对其输出进行拦截，需要注意的是，不能直接拦截buffer，因为得到的信息不够，我们拦截过程中，除了要获取到当前帧的位图，还需要获取到时间信息、轨道信息等等。因此我们利用AVMutableVideoComposition类来进行拦截。拦截的核心方法主要是以下两个:
+**视频合成**:通过AVMutableComposition进行音、视频合成，AVMutableComposition继承于AVComposition, AVComposition继承于AVAsset，合成后的AVMutableComposition可以直接使用AVPlayer进行播放。
+
+**帧渲染**:渲染的核心思路，我称之为重定向，利用的是AVPlayer播放过程中对其输出进行拦截，需要注意的是，不能直接拦截buffer，因为得到的信息不够，我们拦截过程中，除了要获取到当前帧的位图，还需要获取到时间信息、轨道信息等等。因此我们利用AVMutableVideoComposition类来进行拦截。拦截的核心方法主要是以下三个:
 
 1.创建一个类CustomCompositionClass，遵守AVVideoCompositing协议，实现其两个方法
 renderContextChanged
@@ -34,7 +36,8 @@ newItem.videoComposition = yourVideoComposition
 
 
 
-项目主要设计模式：快照模式 + 策略模式
+项目主要设计模式：快照模式 
+项目架构模式：MVVM
 
 
 难点1:大量的CVPixelBuffer，CMSampleBuffer需要自己管理内存，对MRC的要求较高。

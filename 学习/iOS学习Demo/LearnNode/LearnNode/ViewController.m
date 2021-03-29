@@ -56,16 +56,15 @@
     //信号量
 //    [self semaphore];
     
-
+    
+    
+    //死锁
+//    [self deadLock];
 
     
-//    //2.
-//    for (NSInteger i = 0; i < 1000; i++) {
-//        dispatch_async(global_queue, ^{
-//            self.name = [NSString stringWithFormat:@"name:%@", @"123"];
-//        });
-//    }
-    
+
+
+
 }
 
 /*
@@ -322,7 +321,42 @@
 }
 
 
-
+//死锁
+- (void)deadLock {
+    
+    
+//    dispatch_queue_t queue = dispatch_queue_create("serial", DISPATCH_QUEUE_CONCURRENT);
+//    dispatch_async(queue, ^{
+//        NSLog(@"1:%@",[NSThread currentThread]);
+//        dispatch_sync(queue, ^{
+//            NSLog(@"2:%@",[NSThread currentThread]);
+//        });
+//        NSLog(@"3");
+//    });
+    
+    
+    
+//    NSLog(@"1");
+//
+//    dispatch_sync(dispatch_get_main_queue(), ^{
+//        NSLog(@"2");
+//    });
+//
+//    NSLog(@"3");
+    
+    
+//
+//    dispatch_queue_t queue = dispatch_queue_create("serial", DISPATCH_QUEUE_CONCURRENT);
+//    dispatch_async(queue, ^{
+//        NSLog(@"1:%@",[NSThread currentThread]);
+//        dispatch_sync(dispatch_get_main_queue(), ^{
+//            NSLog(@"2:%@",[NSThread currentThread]);
+//            sleep(3);
+//        });
+//        NSLog(@"3:%@",[NSThread currentThread]);
+//    });
+    
+}
 
 
 - (IBAction)click:(UIButton *)sender {
