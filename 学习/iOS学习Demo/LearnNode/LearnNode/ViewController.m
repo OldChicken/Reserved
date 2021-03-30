@@ -11,8 +11,11 @@
 
 @property (nonatomic,copy) NSString *name;
 @property (nonatomic,assign) int age;
-@property (nonatomic,strong) NSMutableArray *array;
+//@property (nonatomic,strong) NSMutableArray *array;
 @property (nonatomic,assign) BOOL isMainThreadExit;
+
+@property (nonatomic,strong)NSArray *array;
+
 @end
 
 @implementation ViewController
@@ -62,7 +65,8 @@
 //    [self deadLock];
 
     
-
+    //深、浅拷贝
+    [self shallowAndDeepCopy];
 }
 
 /*
@@ -352,6 +356,34 @@
 //        });
 //        NSLog(@"3:%@",[NSThread currentThread]);
 //    });
+    
+}
+
+
+//深浅拷贝
+- (void)shallowAndDeepCopy {
+    
+
+//    NSMutableArray *sources = [NSMutableArray arrayWithArray:@[@"lcc"]];
+//    NSLog(@"%@",sources);
+//
+//
+//    self.array = sources;
+//
+//    NSLog(@"%@",self.array);
+//
+//    [sources removeAllObjects];
+//
+//    NSLog(@"%@",self.array);
+    
+    
+    NSString *sources = @"lcc";
+    NSString *a2 = [sources mutableCopy];
+    
+    NSArray *sourcesA =@[@"lcc"];
+    NSString *A2 = [sourcesA mutableCopy];
+    
+    NSLog(@"11");
     
 }
 
