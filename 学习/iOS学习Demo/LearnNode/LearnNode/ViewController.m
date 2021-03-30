@@ -377,13 +377,13 @@
 //    NSLog(@"%@",self.array);
     
     
-    NSString *sources = @"lcc";
-    NSString *a2 = [sources mutableCopy];
-    
-    NSArray *sourcesA =@[@"lcc"];
-    NSString *A2 = [sourcesA mutableCopy];
-    
-    NSLog(@"11");
+//    NSString *sources = @"lcc";
+//    NSString *a2 = [sources mutableCopy];
+//    
+//    NSArray *sourcesA =@[@"lcc"];
+//    NSString *A2 = [sourcesA mutableCopy];
+//    
+//    NSLog(@"11");
     
 }
 
