@@ -72,6 +72,13 @@
     
     //自动释放池
 //    [self autoreleasepool];
+    
+    
+    
+    
+    
+    //定时器
+    [self timer];
 }
 
 
@@ -429,6 +436,50 @@
     
     //q3:现在for循环产生大量的临时变量，内存是否会激增，会的话要怎么解决?
     //答:不一定，新版本的Xcode，arc做了优化，一个函数内的for循环或者while循环产生大量的临时变量，不一定会在函数退出时插入release，而是在每次循环结束的时候就插入了，但是老版本的arc，所有的临时变量会在函数退出时才自动release，导致积累大量的临时变量。为了解决内存上升，可以每次循环时，都把临时变量加入到@autoreleasepool中，提前释放。
+}
+
+
+
+
+- (void)timer {
+    
+    
+    /*
+     - (void)viewDidLoad {
+         [super viewDidLoad];
+         // Do any additional setup after loading the view.
+         
+         NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:2
+                                                           target:self
+                                                         selector:@selector(timeAction)
+                                                         userInfo:nil
+                                                          repeats:YES];
+         
+     }
+
+     - (void)timeAction {
+         NSLog(@"timeAction");
+     }
+
+     - (void)dealloc {
+         NSLog(@"dealloc");
+     }
+     
+     
+     
+     q1:上述代码有什么问题？
+     答:viewcontroller不会释放。因为定时器没有释放，而定时器强持有了self。
+     
+     q2: __weak typeof(self) weakSelf = self,target传weakSelef呢？
+     答:不可以，在解决block循环引用时，可以通过__weak修饰，为的是让让block持有self时以weak的方式不增加引用计数，但是这里timer的target是strong类型的，weakSelf和self地址相同，传入weakSelf，依然会让引用计数加1。
+     
+     q3:解决Timer的内存泄漏的方案：
+     1.杜绝timer和target的循环引用，同时确保执行timer的invalidate方法。
+     2.如果在target的dealloc方法里调用invalidate方法，需要想办法让timer弱引用target，可以用blcok+__weak,也可以使用NSProcy或者中间类来实现。
+     3.target使用类对象或者单例对象。
+     
+     */
+    
 }
 
 

@@ -14,8 +14,8 @@
             filePath = "LearnNode/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "389"
-            endingLineNumber = "389"
+            startingLineNumber = "396"
+            endingLineNumber = "396"
             landmarkName = "-shallowAndDeepCopy"
             landmarkType = "7">
          </BreakpointContent>
