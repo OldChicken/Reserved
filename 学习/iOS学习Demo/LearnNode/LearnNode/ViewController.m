@@ -6,7 +6,7 @@
 //
 
 #import "ViewController.h"
-
+#import "Person.h"
 @interface ViewController ()
 
 @property (nonatomic,copy) NSString *name;
@@ -66,8 +66,17 @@
 
     
     //深、浅拷贝
-    [self shallowAndDeepCopy];
+//    [self shallowAndDeepCopy];
+    
+    
+    
+    //自动释放池
+//    [self autoreleasepool];
 }
+
+
+
+
 
 /*
  消费者生产模式代码实现
@@ -385,6 +394,41 @@
 //    
 //    NSLog(@"11");
     
+}
+
+
+
+//自动释放池
+- (void)aotureleasepool {
+    
+    //案例1
+//    int main(int argc, char * argv[]) {
+//        NSString * appDelegateClassName;
+//        @autoreleasepool {
+//            // Setup code that might create autoreleased objects goes here.
+//            appDelegateClassName = NSStringFromClass([AppDelegate class]);
+//        }
+//        return UIApplicationMain(argc, argv, nil, appDelegateClassName);
+//    }
+    
+    //上述代码什么意思？
+    
+    //案例2
+//    Person * p = [[Person alloc] init];
+//
+//
+//    while (1) {
+//
+//    }
+    //q1：ARC下，上述代码，p会释放吗？
+    //答:不会，因为函数不会退出，p对象无法release
+    //q2:如何让p释放？
+    //答:添加到自动释放池
+    
+    
+    
+    //q3:现在for循环产生大量的临时变量，内存是否会激增，会的话要怎么解决?
+    //答:不一定，新版本的Xcode，arc做了优化，一个函数内的for循环或者while循环产生大量的临时变量，不一定会在函数退出时插入release，而是在每次循环结束的时候就插入了，但是老版本的arc，所有的临时变量会在函数退出时才自动release，导致积累大量的临时变量。为了解决内存上升，可以每次循环时，都把临时变量加入到@autoreleasepool中，提前释放。
 }
 
 

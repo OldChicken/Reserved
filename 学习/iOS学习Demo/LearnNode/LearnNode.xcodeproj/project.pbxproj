@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8547791D2616C70C00CA856E /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 8547791C2616C70C00CA856E /* Person.m */; };
 		85A4837A25FB04EE0014E5C8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A4837925FB04EE0014E5C8 /* AppDelegate.m */; };
 		85A4837D25FB04EE0014E5C8 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A4837C25FB04EE0014E5C8 /* SceneDelegate.m */; };
 		85A4838025FB04EE0014E5C8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A4837F25FB04EE0014E5C8 /* ViewController.m */; };
@@ -36,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8547791B2616C70C00CA856E /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		8547791C2616C70C00CA856E /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		85A4837525FB04EE0014E5C8 /* LearnNode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LearnNode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85A4837825FB04EE0014E5C8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		85A4837925FB04EE0014E5C8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -104,6 +107,8 @@
 		85A4837725FB04EE0014E5C8 /* LearnNode */ = {
 			isa = PBXGroup;
 			children = (
+				8547791B2616C70C00CA856E /* Person.h */,
+				8547791C2616C70C00CA856E /* Person.m */,
 				85A4837825FB04EE0014E5C8 /* AppDelegate.h */,
 				85A4837925FB04EE0014E5C8 /* AppDelegate.m */,
 				85A4837B25FB04EE0014E5C8 /* SceneDelegate.h */,
@@ -268,6 +273,7 @@
 			files = (
 				85A4838025FB04EE0014E5C8 /* ViewController.m in Sources */,
 				85A4837A25FB04EE0014E5C8 /* AppDelegate.m in Sources */,
+				8547791D2616C70C00CA856E /* Person.m in Sources */,
 				85A4838B25FB04F40014E5C8 /* main.m in Sources */,
 				85A4837D25FB04EE0014E5C8 /* SceneDelegate.m in Sources */,
 			);
