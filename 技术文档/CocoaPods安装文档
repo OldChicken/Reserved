@@ -1,0 +1,126 @@
+查看rvm环境：
+rvm -v
+
+如果没安装则执行以下操作进行安装：
+1.安装rvm  ********************************************************************************************************
+curl -L get.rvm.io | bash -s stable
+
+2.指定源
+source ~/.rvm/scripts/rvm
+
+3.查看版本确认是否安装成功
+rvm -v
+会出现类似这种的  表示安装成功
+rvm 1.29.12 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io]
+
+4.列出所有指定源里的ruby版本，一般建议安装最新的ruby环境
+rvm list known
+
+//出现 以下的内容
+[ruby-]1.8.6[-p420]
+[ruby-]1.8.7[-head] # security released on head
+[ruby-]1.9.1[-p431]
+[ruby-]1.9.2[-p330]
+[ruby-]1.9.3[-p551]
+[ruby-]2.0.0[-p648]
+[ruby-]2.1[.10]
+[ruby-]2.2[.10]
+[ruby-]2.3[.8]
+[ruby-]2.4[.10]
+[ruby-]2.5[.8]
+[ruby-]2.6[.6]
+[ruby-]2.7[.2]
+[ruby-]3[.0.0]
+ruby-head
+
+
+
+5.用rvm安装ruby环境: ***********************************************************************************************
+5.1: 查看当前的ruby的版本
+ruby -v
+得到以下版本信或更低版本信息
+ruby 3.0.0p0 (2020-12-25 revision 95aff21468) [x86_64-darwin21]
+升级最新版的ruby
+
+5.2: 在上面操作中 rvm list known 指令中可以看到ruby的最新版本为3.0.0 所以执行以下指令 然后根据提示按“enter”键。
+rvm install 3.0.0
+
+5.3: 这里在升级ruby的时候失败的话 可能是gem太老了可以尝试用如下命令升级 gem
+sudo gem update --system
+
+5.4: 查询已经安装的ruby
+rvm list
+如果显示以下则表示成功
+=* ruby-3.0.0 [ x86_64 ]
+# => - current
+# =* - current && default
+#  * - default
+
+(5.5: 如果想卸载一个已安装版本的命令： rvm remove 3.0.0)
+
+5.6: 查看当前镜像源
+查看当前镜像源
+gem sources -l
+
+会显示如下:
+*** CURRENT SOURCES *** 
+http://rubygems.org/
+
+使用国外的镜像会很慢，所以需要切换到国内：先删除, 再添加
+gem sources --remove https://rubygems.org/
+gem sources -a https://gems.ruby-china.com/
+
+再次查看, 测试是否成功
+gem sources -l
+会显示如下:
+*** CURRENT SOURCES ***
+https://gems.ruby-china.com/
+
+到这里就已经把Ruby环境成功的安装到了Mac OS X上，接下来就可以进行相应的开发使用了。
+
+
+
+6.安装home-brew   *****************************************************************************************************************
+6.1: 安装
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+安装过程中需要按回车键确认
+
+6.2: 检测是否存在冲突(一般没error，不需要再检查)
+brew doctor
+会显示 Your system is ready to brew.
+
+6.3: 检查是否安装成功, 出现版本号就成功了.
+brew --version
+// 会出现
+Homebrew 3.6.8
+Homebrew/homebrew-core (git revision 1cddee8329a; last commit 2022-11-05)
+
+tips:如果出现以下错误信息请先卸载homebrew
+While executing gem ... (Gem::InstallError)或
+While executing gem ... (Gem::FilePermissionError)
+卸载命令
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
+然后根据提示删除以下文件夹内容
+The following possible Homebrew files were not deleted:
+/usr/local/Frameworks/
+/usr/local/Homebrew/
+/usr/local/bin/
+/usr/local/etc/
+/usr/local/include/
+/usr/local/lib/
+/usr/local/opt/
+/usr/local/sbin/
+/usr/local/share/
+/usr/local/var/
+
+
+7.安装CocoaPods(sudo 表示管理员执行指令，需要输入密码的) *****************************************************************************
+
+sudo gem install -n /usr/local/bin cocoapods
+
+
+8. 安装protobuf    **************************************************************************************************************
+brew install swift-protobuf grpc-swift
+
+
+
